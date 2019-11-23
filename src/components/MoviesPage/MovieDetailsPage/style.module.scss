@@ -1,0 +1,8 @@
+.movieCard {
+  display: flex;
+  flex-direction: row;
+  &Info {
+    display: flex;
+    flex-direction: column;
+  }
+}
