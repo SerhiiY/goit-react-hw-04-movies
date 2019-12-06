@@ -31,7 +31,14 @@ export default class MovieDetailsPage extends Component {
         [infoType]: infoType === 'reviews' ? data.results :
           infoType === 'credits' ? data.cast : data
       }))
-    .finally(() => this.setState({ spinner: false }))
+      .finally(() => {
+        this.setState({ spinner: false });
+        if(infoType === 'credits' || infoType === 'reviews')
+        window.scrollTo({
+          top: 400,
+          behavior: "smooth"
+        });
+      })
 
   }
 
