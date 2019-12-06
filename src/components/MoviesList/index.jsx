@@ -17,11 +17,13 @@ const MoviesList = ({ moviesList, url, location }) =>  (
 MoviesList.propTypes = {
   moviesList: PropTypes.array,
   url: PropTypes.string,
+  location: PropTypes.object,
 }
 
 MoviesList.defaultProps = {
   moviesList: [],
   url: '/',
+  location: {pathname: '/'},
 }
 
 

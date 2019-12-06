@@ -52,7 +52,9 @@ export default class MovieDetailsPage extends Component {
 
   goBack = () => {
     const { history } = this.props;
-    history.push({...this.location_state});
+    this.location_state ?
+    history.push({ ...this.location_state }) :
+    history.push({ pathname: '/movies' })
   }
 
   render() {
@@ -77,7 +79,7 @@ export default class MovieDetailsPage extends Component {
             </Switch>
           </section>
         }  
-        {spinner && <Loader/>}  
+        {spinner && <Loader style={{zIndex: "99", display: "block"}}/>}  
       </>
     )
   }
