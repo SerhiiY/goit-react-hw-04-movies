@@ -1,49 +1,77 @@
-import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, Switch, Route } from 'react-router-dom';
+import css from './style.module.scss';
+import Loader from 'react-loader-spinner';
+
 import Cast from './Cast';
 import Reviews from './Reviews';
-import css from './style.module.scss';
-import PropTypes from 'prop-types';
+import MoviesApi from '../../MoviesApi';
+import MovieCard from './MovieCard';
 
-const MovieDetailsPage = ({ movie }) => {
+export default class MovieDetailsPage extends Component {
   
-  const { backdrop_path, title, vote_average, overview, genres } = movie;
-  const img_url = backdrop_path ? 'https://image.tmdb.org/t/p/w500' + backdrop_path : '';
+  state = {
+    spinner: false,
+    movieInfo: {},
+    credits: [],
+    reviews: []
+  }
 
-  const genresNames = genres ? genres.reduce((acc, el) => acc + el.name + ', ', '').slice(-2) : '';
+  location_state = this.props.location.state;
 
-  return (
-    <div>
-      <section className={css.movieCard}>
-        <img src={img_url} alt="MoviePoster" />
-        <atricle className={css.movieCardInfo}>
-          <h2>{title}</h2>
-          <p>User score: {vote_average}</p>
-          <h3>Overview</h3>
-          <p>{overview}</p>
-          <h4>Genres</h4>
-          <p>{genresNames}</p>
-        </atricle>
-      </section>
-      <section>
-        <p>Additional information</p>
-        <Link to='/movies/cast'>Cast</Link>
-        <Link to='/movies/reviews'>Reviews</Link>
-      </section>
-      <Switch>
-        <Route path='/movies/cast' component={Cast} />
-        <Route path='/movies/reviews' component={Reviews} />
-      </Switch>
-    </div>
-  )
+  componentDidMount() {
+    this.fetchMovieInfo(this.props.match.params.movie_id, 'movieInfo');
+  }
+
+  fetchMovieInfo = (url, infoType) => {
+    if (!this.state.spinner) this.setState({ spinner: true });
+
+    MoviesApi(`/movie/${url}?`)
+      .then((data) => this.setState({
+        [infoType]: infoType === 'reviews' ? data.results :
+          infoType === 'credits' ? data.cast : data
+      }))
+    .finally(() => this.setState({ spinner: false }))
+
+  }
+
+  fetchCast = () => {
+    this.fetchMovieInfo(`${this.state.movieInfo.id}/credits`, 'credits');
+  }
+
+  fetchReviews = () => {
+    this.fetchMovieInfo(`${this.state.movieInfo.id}/reviews`, 'reviews');
+  }
+
+  goBack = () => {
+    const { history } = this.props;
+    history.push({...this.location_state});
+  }
+
+  render() {
+    const { match: { url } } = this.props;
+    const { movieInfo, spinner, credits, reviews } = this.state;
+
+    return (
+      <>
+        { movieInfo &&
+          <section className={css.movieDetailsPage}>
+            <button className={css.backButton} onClick={this.goBack}>Back</button>
+            <MovieCard movieInfo={movieInfo}/>
+            <div>
+              <p>Additional information</p>
+              <Link to={`${url}/cast`} onClick={this.fetchCast}>Cast</Link>
+              <br />
+              <Link to={`${url}/reviews`} onClick={this.fetchReviews}>Reviews</Link>
+            </div>
+            <Switch>
+              <Route path={`${url}/cast`} render={props => <Cast credits={credits}/>} />
+              <Route path={`${url}/reviews`} render={props => <Reviews reviews={reviews}/>}/>
+            </Switch>
+          </section>
+        }  
+        {spinner && <Loader/>}  
+      </>
+    )
+  }
 }
-
-MovieDetailsPage.propTypes = {
-  movie: PropTypes.object,
-}
-
-MovieDetailsPage.defaultProps = {
-  movie: {},
-}
-
-export default MovieDetailsPage;

@@ -1,8 +1,31 @@
-.movieCard {
-  display: flex;
-  flex-direction: row;
-  &Info {
-    display: flex;
-    flex-direction: column;
+.movieDetailsPage {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:#fff;
+  padding: 20px;
+  li {
+    list-style-type: none;
+    padding: 0;
+  }
+  div+div {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: solid 1px #555;
+  }
+  div {
+    p, h3 {
+      margin: 5px 0;
+    }
   }
 }
+
+.backButton {
+  width: 100px;
+  height: 20px;
+  line-height: 17px;
+  margin-bottom: 20px;
+}
+

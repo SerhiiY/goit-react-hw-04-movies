@@ -1,0 +1,17 @@
+.movieCard {
+  display: flex;
+  flex-direction: row;
+  &Info {
+    padding-left: 20px;
+    h2, h3, h4 {
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+  }
+  img {
+    max-width: 50%;
+    height: auto;
+  }
+}

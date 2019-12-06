@@ -1,0 +1,11 @@
+.character {
+  display: block;
+  margin-bottom: 40px;
+  &:nth-child(1){
+    margin-top: 0;
+  }
+}
+
+.img {
+  max-width: 200px;
+}
