@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Switch, Route } from 'react-router-dom';
 import css from './style.module.scss';
-import Loader from 'react-loader-spinner';
+import Loader2 from 'react-loader-spinner';
 
 import Cast from './Cast';
 import Reviews from './Reviews';
@@ -11,7 +11,7 @@ import MovieCard from './MovieCard';
 export default class MovieDetailsPage extends Component {
   
   state = {
-    spinner: false,
+    spinner2: false,
     movieInfo: {},
     credits: [],
     reviews: []
@@ -24,15 +24,15 @@ export default class MovieDetailsPage extends Component {
   }
 
   fetchMovieInfo = (url, infoType) => {
-    if (!this.state.spinner) this.setState({ spinner: true });
+    if (!this.state.spinner2) this.setState({ spinner2: true });
 
     MoviesApi(`/movie/${url}?`)
-      .then((data) => this.setState({
+      .then((data) => data && this.setState({
         [infoType]: infoType === 'reviews' ? data.results :
           infoType === 'credits' ? data.cast : data
       }))
       .finally(() => {
-        this.setState({ spinner: false });
+        this.setState({ spinner2: false });
         if(infoType === 'credits' || infoType === 'reviews')
         window.scrollTo({
           top: 400,
@@ -59,7 +59,7 @@ export default class MovieDetailsPage extends Component {
 
   render() {
     const { match: { url } } = this.props;
-    const { movieInfo, spinner, credits, reviews } = this.state;
+    const { movieInfo, spinner2, credits, reviews } = this.state;
 
     return (
       <>
@@ -77,9 +77,9 @@ export default class MovieDetailsPage extends Component {
               <Route path={`${url}/cast`} render={props => <Cast credits={credits}/>} />
               <Route path={`${url}/reviews`} render={props => <Reviews reviews={reviews}/>}/>
             </Switch>
+            {spinner2 && <Loader2 style={{zIndex: "99", display: "block"}}/>}  
           </section>
         }  
-        {spinner && <Loader style={{zIndex: "99", display: "block"}}/>}  
       </>
     )
   }
