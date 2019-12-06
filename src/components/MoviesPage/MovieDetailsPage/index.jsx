@@ -54,7 +54,7 @@ export default class MovieDetailsPage extends Component {
     const { history } = this.props;
     this.location_state ?
     history.push({ ...this.location_state }) :
-    history.push({ pathname: '/movies' })
+    history.push({ pathname: '/' })
   }
 
   render() {
